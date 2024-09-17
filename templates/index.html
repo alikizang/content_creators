@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Influencers</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .pagination {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .pagination button {
+            padding: 10px;
+            margin: 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Content Creator Database</h1>
+
+    <table id="influencers-table">
+        <thead>
+            <tr>
+                <th>Real Name</th>
+                <th>Known As</th>
+                <th>Status</th>
+                <th>Posting Frequency</th>
+                <th>Category</th>
+                <th>Primary Driver</th>
+                <th>Primary Platform</th>
+                <th>Types of People</th>
+                <th>Management</th>
+                <th>Gender</th>
+                <th>Original Country</th>
+                <th>Primary Posting Language</th>
+                <th>Domain of Influence</th>
+                <th>Topics</th>
+                <th>Niches</th>
+                <th>Email(s)</th>
+                <th>Website/Links</th>
+                <th>Phone</th>
+                <th>First Appearance</th>
+                <th>Own Brand?</th>
+                <th>Sponsoring Brands?</th>
+                <th>Instagram Handle</th>
+                <th>Type on Instagram</th>
+                <th>YouTube Channel</th>
+                <th>Type on YouTube</th>
+                <th>Facebook Handle</th>
+                <th>Type on Facebook</th>
+                <th>X Handle</th>
+                <th>Type on X</th>
+                <th>TikTok Handle</th>
+                <th>Type on TikTok</th>
+                <th>Twitch Handle</th>
+                <th>Type on Twitch</th>
+                <th>Discord Handle</th>
+                <th>Type on Discord</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data will be populated here dynamically -->
+        </tbody>
+    </table>
+
+    <!-- Pagination Buttons -->
+    <div class="pagination">
+        <button id="prev-page">Previous</button>
+        <span id="page-info"></span>
+        <button id="next-page">Next</button>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+
+        // Function to fetch and display influencers
+        function loadInfluencers(page) {
+            fetch(`/api/influencers?page=${page}`)
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.querySelector('#influencers-table tbody');
+                tableBody.innerHTML = '';  // Clear the table before populating new data
+
+                data.influencers.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row['Real Name']}</td>
+                        <td>${row['Know As']}</td>
+                        <td>${row['Status']}</td>
+                        <td>${row['Posting frequency(Daily, Weekly, Monthly, Yearly)']}</td>
+                        <td>${row['Category of influencer']}</td>
+                        <td>${row['Primary driver of influencer']}</td>
+                        <td>${row['Primary Platform']}</td>
+                        <td>${row['Types of people']}</td>
+                        <td>${row['Who is responsible for managing social networks']}</td>
+                        <td>${row['Gender']}</td>
+                        <td>${row['Original Country']}</td>
+                        <td>${row['Primary Posting Language']}</td>
+                        <td>${row['Domain of Influence']}</td>
+                        <td>${row['Topics']}</td>
+                        <td>${row['Niches']}</td>
+                        <td>${row['Email(s)']}</td>
+                        <td>${row['Website or Others links']}</td>
+                        <td>${row['Phone']}</td>
+                        <td>${row['First Appearance']}</td>
+                        <td>${row['Own Brand? (Y/N)']}</td>
+                        <td>${row['Sponsoring Brand(s) (Y/N)']}</td>
+                        <td>${row['Instagram Handle']}</td>
+                        <td>${row['Type of influencer on Instagram']}</td>
+                        <td>${row['YouTube Channel']}</td>
+                        <td>${row['Type of influencer on Youtube']}</td>
+                        <td>${row['Facebook Handle']}</td>
+                        <td>${row['Type of influencer on Facebook']}</td>
+                        <td>${row['X Handle']}</td>
+                        <td>${row['Type of influencer on X']}</td>
+                        <td>${row['TikTok Handle']}</td>
+                        <td>${row['Type of influencer on Tiktok']}</td>
+                        <td>${row['Twitch Handle']}</td>
+                        <td>${row['Type of influencer on Twitch']}</td>
+                        <td>${row['Discord Handle']}</td>
+                        <td>${row['Type of influencer on Discord']}</td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                // Update pagination information
+                totalPages = data.total_pages;
+                document.getElementById('page-info').innerText = `Page ${data.current_page} of ${totalPages}`;
+
+                // Disable/enable buttons based on current page
+                document.getElementById('prev-page').disabled = (data.current_page === 1);
+                document.getElementById('next-page').disabled = (data.current_page === totalPages);
+            });
+        }
+
+        // Event listeners for pagination buttons
+        document.getElementById('prev-page').addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadInfluencers(currentPage);
+            }
+        });
+
+        document.getElementById('next-page').addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                loadInfluencers(currentPage);
+            }
+        });
+
+        // Load the first page initially
+        loadInfluencers(currentPage);
+    </script>
+</body>
+</html>

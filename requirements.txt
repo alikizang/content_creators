@@ -166,7 +166,6 @@ langchain-openai==0.0.6
 langchain-text-splitters==0.0.1
 langcodes==3.3.0
 langdetect==1.0.9
-langflow==0.6.16
 langfuse==2.26.3
 langsmith==0.1.48
 lark==1.1.8
